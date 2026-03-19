@@ -53,9 +53,9 @@ import profileManage from './profile'
                     reqestId
                 ).then(res=> res)
                 if(responce){
-                    return {success:true, data : res}
+                    return {success:true, data : responce}
                 }
-                return {success:false , message: res}
+                return {success:false , message: "Request document not found"}
             } catch (error) {
                 console.log("Appwrite throw error to get reqest" , error.message);
                 return {success: false , message: error.message}
@@ -93,15 +93,12 @@ import profileManage from './profile'
             }
             try {
 
-                const responce = await this.database.deleteDocument(
+                await this.database.deleteDocument(
                     conf.appwriteDatabaseId,
                     conf.appwriteCollectionId4,
                     reqestId
-                ).then(res=> res)
-                if(responce){
-                    return {success:true, data : res}
-                }
-                return {success:false , message: res}
+                )
+                return {success:true, data : {}}
             } catch (error) {
                 console.log("Appwrite throw error to Delete " , error.message);
                 return {success: false , message: error.message}

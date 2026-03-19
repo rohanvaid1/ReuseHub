@@ -50,35 +50,27 @@ class AuthService {
             return false
         }
         try {
-            const promise = this.account.createRecovery(email, 
+            const response = await this.account.createRecovery(email, 
                 conf.recoveryPoint 
             );
-
-            promise.then(function (response) {
-               return   response   // Success
-            }, function (error) {
-                console.log(error); 
-                return false// Failure
-            });
+            return response;
         } catch (error) {
-            console.log("Appwrite throow error to send mail " , error.message)
+            console.log("Appwrite throw error to send mail " , error.message)
             return false 
         }
     }
 
     async changeChage(userId , secret , password){
        try {
-        const promise = this.account.updateRecovery(
+        const data = await this.account.updateRecovery(
             userId,
             secret,
             password
-        ).then(res=>res);
-        return {succes:true ,data : promise}
-        // Failure
-           
+        );
+        return {succes:true, data}
        } catch(error){
         console.log(error)
-        return  {succes:false ,message : error}
+        return  {succes:false ,message : error.message}
        }
         
     }
