@@ -13,7 +13,7 @@ export default function App() {
   const reloard = async ()=>{
     const res =await authService.currentUser().then(res=> res)
     
-    if(res.succes){
+    if(res && res.succes){
       const result = await profileManage.getProfile(res.data.$id)
     dispatch(login(res.data));
     if(result.success){
