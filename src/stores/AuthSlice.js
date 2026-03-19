@@ -5,7 +5,7 @@ const initialState = {
         userData : null,
         profile :null,
         items : [],
-        opne : false,
+        open : false,
 }
 
 export  const AuthSlice = createSlice({

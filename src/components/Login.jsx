@@ -10,6 +10,7 @@ import profileManage from "../appwrite/profile";
 export default function Login() {
   const dispatch = useDispatch()
     const [loading , setLoading] = useState(false)
+  const [error, setError] = useState("")
   const {
     register,
     handleSubmit,
@@ -20,32 +21,31 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     setLoading(true)
+    setError("")
     try {
       const session = await authService.createSession(data.email, data.password);
       
       if (session.succes) {
         const create = await authService.currentUser();
-        if(create.succes)
+        if (create && create.succes)
         {
 
           dispatch(login(create.data))
-        // console.log("session data ", create.data)
 
         const prof = await profileManage.getProfile(create.data.$id)
-          if(prof.success)
+          if (prof.success && prof.data.documents.length > 0)
          { 
-          // console.log(prof.data.documents[0])
-           dispatch(profileIn(prof.data))
+           dispatch(profileIn(prof.data.documents[0]))
+         }
         navigate("/"); 
+    }
       }
-    }// Redirect on successful login
-      
-  }
       else {
-        alert(session.message)
+        setError(session.message || "Login failed. Please check your credentials.")
       }
     } catch (error) {
       console.error("Login failed:", error);
+      setError("An unexpected error occurred. Please try again.")
     }
     setLoading(false);
   };
@@ -58,6 +58,8 @@ export default function Login() {
             Sign in to your account
           </h1>
           <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            {/* Login Error Message */}
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             {/* Email Input */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
